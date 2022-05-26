@@ -7,7 +7,6 @@ import java.lang.annotation.Target;
 
 /**
  * 接口Api注解，根据该注解标注的方法，自动获取所有的api
- * 
  * @author huang.cz
  * @since 2022/4/11 20:55
  */

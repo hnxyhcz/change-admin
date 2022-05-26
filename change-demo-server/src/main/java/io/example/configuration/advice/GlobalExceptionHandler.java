@@ -1,11 +1,8 @@
 package io.example.configuration.advice;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.ValidationException;
-
+import io.example.domain.exception.NotFoundException;
+import io.example.domain.response.ResponseCode;
+import io.example.domain.response.ResponseResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +13,10 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-import io.example.domain.exception.NotFoundException;
-import io.example.domain.response.ResponseCode;
-import io.example.domain.response.ResponseResult;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.ValidationException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author huang.cz
@@ -54,7 +52,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ResponseResult<Map<String, String>>>
-        handleMethodArgumentTypeMismatchException(HttpServletRequest request, MethodArgumentTypeMismatchException ex) {
+    handleMethodArgumentTypeMismatchException(HttpServletRequest request, MethodArgumentTypeMismatchException ex) {
         logger.error("handleMethodArgumentTypeMismatchException {}\n", request.getRequestURI(), ex);
 
         Map<String, String> details = new HashMap<>(1);
@@ -68,7 +66,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ResponseResult<Map<String, String>>>
-        handleMethodArgumentNotValidException(HttpServletRequest request, MethodArgumentNotValidException ex) {
+    handleMethodArgumentNotValidException(HttpServletRequest request, MethodArgumentNotValidException ex) {
         logger.error("handleMethodArgumentNotValidException {}\n", request.getRequestURI(), ex);
 
         Map<String, String> details = new HashMap<>(ex.getBindingResult().getFieldErrors().size());

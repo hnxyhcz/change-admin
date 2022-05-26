@@ -1,7 +1,19 @@
 package io.example.api;
 
-import javax.validation.Valid;
-
+import com.anji.captcha.model.common.ResponseModel;
+import com.anji.captcha.model.vo.CaptchaVO;
+import com.anji.captcha.service.CaptchaService;
+import io.example.annotation.ApiOperation;
+import io.example.domain.dto.AuthRequest;
+import io.example.domain.dto.CreateUserRequest;
+import io.example.domain.dto.UserView;
+import io.example.domain.response.ResponseCode;
+import io.example.domain.response.ResponseResult;
+import io.example.service.UserService;
+import io.example.utils.JwtTokenUtil;
+import io.example.utils.SecurityContextUtil;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,21 +26,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.anji.captcha.model.common.ResponseModel;
-import com.anji.captcha.model.vo.CaptchaVO;
-import com.anji.captcha.service.CaptchaService;
-
-import io.example.annotation.ApiOperation;
-import io.example.domain.dto.AuthRequest;
-import io.example.domain.dto.CreateUserRequest;
-import io.example.domain.dto.UserView;
-import io.example.domain.response.ResponseCode;
-import io.example.domain.response.ResponseResult;
-import io.example.service.UserService;
-import io.example.utils.JwtTokenUtil;
-import io.example.utils.SecurityContextUtil;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
+import javax.validation.Valid;
 
 /**
  * @author huang.cz
@@ -63,7 +61,8 @@ public class AuthApi {
             // 生成token
             String token = jwtTokenUtil.createAccessToken(authentication);
             return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, token).body(ResponseResult.success(token));
-        } catch (BadCredentialsException ex) {
+        }
+        catch (BadCredentialsException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }

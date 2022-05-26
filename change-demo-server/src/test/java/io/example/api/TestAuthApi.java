@@ -1,14 +1,10 @@
 package io.example.api;
 
-import static io.example.util.JsonHelper.fromJson;
-import static io.example.util.JsonHelper.toJson;
-import static java.lang.System.currentTimeMillis;
-import static org.hamcrest.Matchers.containsString;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.example.api.data.UserTestDataFactory;
+import io.example.domain.dto.AuthRequest;
+import io.example.domain.dto.CreateUserRequest;
+import io.example.domain.dto.UserView;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -18,12 +14,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import io.example.api.data.UserTestDataFactory;
-import io.example.domain.dto.AuthRequest;
-import io.example.domain.dto.CreateUserRequest;
-import io.example.domain.dto.UserView;
+import static io.example.util.JsonHelper.fromJson;
+import static io.example.util.JsonHelper.toJson;
+import static java.lang.System.currentTimeMillis;
+import static org.hamcrest.Matchers.containsString;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -37,15 +35,16 @@ public class TestAuthApi {
 
     @Autowired
     public TestAuthApi(MockMvc mockMvc, ObjectMapper objectMapper, UserTestDataFactory userTestDataFactory) {
-        this.mockMvc = mockMvc;
-        this.objectMapper = objectMapper;
+        this.mockMvc             = mockMvc;
+        this.objectMapper        = objectMapper;
         this.userTestDataFactory = userTestDataFactory;
     }
 
     @Test
     public void testLoginSuccess() throws Exception {
         UserView userView = userTestDataFactory.createUser(String.format("test.user.%d@nix.io", currentTimeMillis()),
-            "Test User", password);
+            "Test User", password
+        );
 
         AuthRequest request = new AuthRequest(userView.getUsername(), password, "test", null);
 
@@ -61,7 +60,8 @@ public class TestAuthApi {
     @Test
     public void testLoginFail() throws Exception {
         UserView userView = userTestDataFactory.createUser(String.format("test.user.%d@nix.io", currentTimeMillis()),
-            "Test User", password);
+            "Test User", password
+        );
 
         AuthRequest request = new AuthRequest(userView.getUsername(), "zxc", "test", null);
 
@@ -96,5 +96,4 @@ public class TestAuthApi {
             .andExpect(status().isBadRequest())
             .andExpect(content().string(containsString("Method argument validation failed")));
     }
-
 }

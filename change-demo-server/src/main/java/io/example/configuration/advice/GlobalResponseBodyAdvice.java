@@ -1,7 +1,7 @@
 package io.example.configuration.advice;
 
-import java.lang.reflect.Type;
-
+import io.example.domain.response.ResponseCode;
+import io.example.domain.response.ResponseResult;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
@@ -11,8 +11,7 @@ import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
-import io.example.domain.response.ResponseCode;
-import io.example.domain.response.ResponseResult;
+import java.lang.reflect.Type;
 
 /**
  * @author huang.cz

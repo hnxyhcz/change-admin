@@ -1,12 +1,11 @@
 package io.example.domain.model;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * @author huang.cz
@@ -40,20 +39,19 @@ public class Api {
     public Api() {}
 
     public Api(String path, String method) {
-        this.path = path;
+        this.path   = path;
         this.method = method;
     }
 
     public Api(String path, String method, String group) {
-        this.path = path;
+        this.path   = path;
         this.method = method;
-        this.group = group;
+        this.group  = group;
     }
 
     public Api(String path, String method, String summary, String description) {
-        this.path = path;
-        this.method = method;
+        this.path    = path;
+        this.method  = method;
         this.summary = summary;
     }
-
 }

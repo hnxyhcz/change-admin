@@ -1,19 +1,18 @@
 package io.example.api;
 
-import javax.annotation.security.RolesAllowed;
-import javax.validation.Valid;
-
+import io.example.domain.dto.*;
+import io.example.domain.model.Role;
+import io.example.service.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import io.example.domain.dto.*;
-import io.example.domain.model.Role;
-import io.example.service.UserService;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
+import javax.annotation.security.RolesAllowed;
+import javax.validation.Valid;
 
 /**
  * @author huang.cz
@@ -55,7 +54,6 @@ public class UserApi {
 
     /**
      * PreAuthorize根据SPEL表达式判断权限（这里表示只能删除自己）
-     * 
      * @param username
      * @return
      */
@@ -67,5 +65,4 @@ public class UserApi {
         String currentPrincipalName = authentication.getName();
         System.out.println(currentPrincipalName);
     }
-
 }

@@ -20,5 +20,7 @@ Please see the article [here](https://www.toptal.com/spring/spring-security-tuto
 
 ## Important Notes
 
-- The article is outdated, in the project authentication is implemented using the spring-boot-starter-oauth2-resource-server library. I will update it when I have some free time.
-- For the sake of simplicity, I keep RSA key pairs in the git repository. Please don't follow this approach in real applications and extract sensitive information outside the project repository.
+- The article is outdated, in the project authentication is implemented using the
+  spring-boot-starter-oauth2-resource-server library. I will update it when I have some free time.
+- For the sake of simplicity, I keep RSA key pairs in the git repository. Please don't follow this approach in real
+  applications and extract sensitive information outside the project repository.

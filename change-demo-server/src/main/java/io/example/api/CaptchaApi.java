@@ -1,20 +1,18 @@
 package io.example.api;
 
-import javax.servlet.http.HttpServletRequest;
-
+import com.anji.captcha.model.common.ResponseModel;
+import com.anji.captcha.model.vo.CaptchaVO;
+import com.anji.captcha.service.CaptchaService;
+import com.anji.captcha.util.StringUtils;
+import io.example.annotation.ApiOperation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.anji.captcha.model.common.ResponseModel;
-import com.anji.captcha.model.vo.CaptchaVO;
-import com.anji.captcha.service.CaptchaService;
-import com.anji.captcha.util.StringUtils;
-
-import io.example.annotation.ApiOperation;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author huang.cz
@@ -27,6 +25,23 @@ import lombok.RequiredArgsConstructor;
 public class CaptchaApi {
 
     private final CaptchaService captchaService;
+
+    public static final String getRemoteId(HttpServletRequest request) {
+        String xfwd = request.getHeader("X-Forwarded-For");
+        String ip = getRemoteIpFromXfwd(xfwd);
+        String ua = request.getHeader("user-agent");
+        return StringUtils.isNotBlank(ip) ? ip + ua : request.getRemoteAddr() + ua;
+    }
+
+    private static String getRemoteIpFromXfwd(String xfwd) {
+        if (StringUtils.isNotBlank(xfwd)) {
+            String[] ipList = xfwd.split(",");
+            return StringUtils.trim(ipList[0]);
+        }
+        else {
+            return null;
+        }
+    }
 
     @PostMapping({"get"})
     @ApiOperation(summary = "获取验证码", anonymous = true)
@@ -41,21 +56,5 @@ public class CaptchaApi {
     public ResponseModel check(@RequestBody CaptchaVO data, HttpServletRequest request) {
         data.setBrowserInfo(getRemoteId(request));
         return this.captchaService.check(data);
-    }
-
-    public static final String getRemoteId(HttpServletRequest request) {
-        String xfwd = request.getHeader("X-Forwarded-For");
-        String ip = getRemoteIpFromXfwd(xfwd);
-        String ua = request.getHeader("user-agent");
-        return StringUtils.isNotBlank(ip) ? ip + ua : request.getRemoteAddr() + ua;
-    }
-
-    private static String getRemoteIpFromXfwd(String xfwd) {
-        if (StringUtils.isNotBlank(xfwd)) {
-            String[] ipList = xfwd.split(",");
-            return StringUtils.trim(ipList[0]);
-        } else {
-            return null;
-        }
     }
 }

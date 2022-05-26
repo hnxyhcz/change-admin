@@ -12,18 +12,17 @@ import java.util.List;
 @Mapper(componentModel = "spring", uses = {ObjectIdMapper.class})
 public abstract class UserViewMapper {
 
-  @Autowired
-  private UserRepo userRepo;
+    @Autowired
+    private UserRepo userRepo;
 
-  public abstract UserView toUserView(User user);
+    public abstract UserView toUserView(User user);
 
-  public abstract List<UserView> toUserView(List<User> users);
+    public abstract List<UserView> toUserView(List<User> users);
 
-  public UserView toUserViewById(ObjectId id) {
-    if (id == null) {
-      return null;
+    public UserView toUserViewById(ObjectId id) {
+        if (id == null) {
+            return null;
+        }
+        return toUserView(userRepo.getById(id));
     }
-    return toUserView(userRepo.getById(id));
-  }
-
 }

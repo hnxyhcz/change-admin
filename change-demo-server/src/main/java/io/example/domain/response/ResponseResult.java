@@ -23,13 +23,12 @@ public class ResponseResult<T> {
     }
 
     public ResponseResult(int code, String message) {
-        this.code = code;
+        this.code    = code;
         this.message = message;
     }
 
     /**
      * 创建带有返回数据的成功对象。
-     *
      * @param data 返回的数据对象
      * @return 返回创建的ResponseResult实例对象
      */
@@ -39,9 +38,8 @@ public class ResponseResult<T> {
 
     /**
      * 创建错误对象。
-     *
      * @param errorCode 错误码
-     * @param message 错误信息
+     * @param message   错误信息
      * @return 返回创建的ResponseResult实例对象
      */
     public static <T> ResponseResult<T> error(ResponseCode errorCode, String message) {

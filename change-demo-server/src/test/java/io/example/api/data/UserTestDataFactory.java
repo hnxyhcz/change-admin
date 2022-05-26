@@ -1,15 +1,14 @@
 package io.example.api.data;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
+import io.example.domain.dto.CreateUserRequest;
+import io.example.domain.dto.UserView;
+import io.example.service.UserService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import io.example.domain.dto.CreateUserRequest;
-import io.example.domain.dto.UserView;
-import io.example.service.UserService;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @Service
 public class UserTestDataFactory {
@@ -35,5 +34,4 @@ public class UserTestDataFactory {
     public void deleteUser(String id) {
         userService.delete(new ObjectId(id));
     }
-
 }

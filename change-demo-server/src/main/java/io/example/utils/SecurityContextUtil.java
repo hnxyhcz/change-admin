@@ -1,14 +1,12 @@
 package io.example.utils;
 
-import java.util.Objects;
-
+import com.nimbusds.jose.shaded.json.JSONObject;
+import io.example.domain.dto.UserView;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 
-import com.nimbusds.jose.shaded.json.JSONObject;
-
-import io.example.domain.dto.UserView;
+import java.util.Objects;
 
 /**
  * @author huang.cz
@@ -27,7 +25,7 @@ public class SecurityContextUtil {
         }
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof Jwt) {
-            return ((Jwt)principal).getClaim("user");
+            return ((Jwt) principal).getClaim("user");
         }
         return null;
     }
@@ -39,5 +37,4 @@ public class SecurityContextUtil {
     public static String getUserId() {
         return Objects.requireNonNull(getUserClaim()).get("id").toString();
     }
-
 }

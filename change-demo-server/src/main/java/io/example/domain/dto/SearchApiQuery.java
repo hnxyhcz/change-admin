@@ -3,15 +3,15 @@ package io.example.domain.dto;
 import lombok.Builder;
 
 public record SearchApiQuery(
-  String path,
-  String method
+    String path,
+    String method
 ) {
 
-  @Builder
-  public SearchApiQuery {
-  }
+    @Builder
+    public SearchApiQuery {
+    }
 
-  public SearchApiQuery() {
-    this(null, null);
-  }
+    public SearchApiQuery() {
+        this(null, null);
+    }
 }

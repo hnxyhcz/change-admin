@@ -1,10 +1,13 @@
 package io.example.configuration;
 
-import static java.lang.String.format;
-
-import java.security.interfaces.RSAPrivateKey;
-import java.security.interfaces.RSAPublicKey;
-
+import com.nimbusds.jose.jwk.JWK;
+import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.RSAKey;
+import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
+import com.nimbusds.jose.jwk.source.JWKSource;
+import com.nimbusds.jose.proc.SecurityContext;
+import io.example.repository.UserRepo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -32,15 +35,10 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-import com.nimbusds.jose.jwk.JWK;
-import com.nimbusds.jose.jwk.JWKSet;
-import com.nimbusds.jose.jwk.RSAKey;
-import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
-import com.nimbusds.jose.jwk.source.JWKSource;
-import com.nimbusds.jose.proc.SecurityContext;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
 
-import io.example.repository.UserRepo;
-import lombok.RequiredArgsConstructor;
+import static java.lang.String.format;
 
 /**
  * @author change
@@ -70,7 +68,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * ignore：完全绕过了spring security的所有filter，相当于不走spring security
-     * 
      * @param web
      */
     @Override
@@ -86,7 +83,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * permitAll 没有绕过spring security，匿名请求如果带有Authorization还是会判断token是否有效
-     * 
      * @param http
      * @throws Exception
      */

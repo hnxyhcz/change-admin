@@ -1,12 +1,13 @@
 package io.example;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.PostConstruct;
-
+import io.example.annotation.ApiOperation;
+import io.example.domain.dto.CreateUserRequest;
+import io.example.domain.model.Api;
+import io.example.domain.model.Role;
+import io.example.service.ApiService;
+import io.example.service.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
@@ -20,14 +21,11 @@ import org.springframework.web.servlet.mvc.condition.RequestMethodsRequestCondit
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
-import io.example.annotation.ApiOperation;
-import io.example.domain.dto.CreateUserRequest;
-import io.example.domain.model.Api;
-import io.example.domain.model.Role;
-import io.example.service.ApiService;
-import io.example.service.UserService;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author change
@@ -110,5 +108,4 @@ public class DatabaseInitializer implements ApplicationListener<ApplicationReady
         // 删除多余的接口（如果前端有对数据权限的新增修改功能，将改行注释，避免误删）
         apiService.deleteIdNin(apiIdList);
     }
-
 }

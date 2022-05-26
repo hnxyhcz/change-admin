@@ -1,19 +1,18 @@
 package io.example.utils;
 
-import static java.util.stream.Collectors.joining;
-
-import java.time.Instant;
-import java.util.Map;
-
+import io.example.domain.dto.UserView;
+import io.example.domain.mapper.UserViewMapper;
+import io.example.domain.model.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.*;
 import org.springframework.stereotype.Component;
 
-import io.example.domain.dto.UserView;
-import io.example.domain.mapper.UserViewMapper;
-import io.example.domain.model.User;
-import lombok.RequiredArgsConstructor;
+import java.time.Instant;
+import java.util.Map;
+
+import static java.util.stream.Collectors.joining;
 
 /**
  * @author huang.cz
@@ -29,7 +28,7 @@ public class JwtTokenUtil {
 
     /**
      * 生成token
-     * 
+     *
      * @param authentication 认证成功后的用户信息
      * @return token字符串
      * @formatter:off
