@@ -1,0 +1,37 @@
+{
+  "groups": [
+    {
+      "name": "custom.cache",
+      "type": "io.example.core.configuration.RedisConfig",
+      "sourceType": "io.example.core.configuration.RedisConfig"
+    },
+    {
+      "name": "custom.token",
+      "type": "io.example.core.security.TokenProperties",
+      "sourceType": "io.example.core.security.TokenProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "custom.cache.entries",
+      "type": "java.util.Map<java.lang.String,java.time.Duration>",
+      "sourceType": "io.example.core.configuration.RedisConfig"
+    },
+    {
+      "name": "custom.token.header",
+      "type": "java.lang.String",
+      "sourceType": "io.example.core.security.TokenProperties"
+    },
+    {
+      "name": "custom.token.prefix",
+      "type": "java.lang.String",
+      "sourceType": "io.example.core.security.TokenProperties"
+    },
+    {
+      "name": "custom.token.expire-time",
+      "type": "java.lang.String",
+      "sourceType": "io.example.core.security.TokenProperties"
+    }
+  ],
+  "hints": []
+}
