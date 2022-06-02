@@ -3,10 +3,16 @@ import { Alert, message } from 'antd';
 import React, { useRef, useState } from 'react';
 import { ProFormCheckbox, ProFormText, LoginForm } from '@ant-design/pro-form';
 import { history, useModel } from 'umi';
-import { login } from '@/services/rms/login';
-import styles from '../index.less';
-import SlideCaptcha from '@/components/SlideCaptcha';
+
+import SlideCaptcha from '@/components/SliderCaptcha';
 import LoginLayout from '@/layouts/LoginLayout';
+import styles from '../index.less';
+import { login } from '@/services/login';
+
+type LoginStateType = {
+  success: boolean
+  message: string | undefined
+}
 
 const LoginMessage: React.FC<{ content: string }> = ({ content }) => (
   <Alert
@@ -18,13 +24,12 @@ const LoginMessage: React.FC<{ content: string }> = ({ content }) => (
 );
 
 const Login: React.FC = () => {
-  const [userLoginState, setUserLoginState] = useState<API.Response>();
   const { initialState, setInitialState } = useModel<any>('@@initialState');
   const { settings: { logo, title, subject, bacgImage } } = initialState;
-
-  const formRef = useRef<API.LoginParams>()
+  const formRef = useRef<API.LoginRequest>()
   const [submitting, setSubmitting] = useState(false);
   const [showCaptcha, setShowCaptcha] = useState(false);
+  const [loginState, setLoginState] = useState<LoginStateType>();
 
   const fetchUserInfo = async () => {
     const userInfo = await initialState?.fetchUserInfo?.();
@@ -36,46 +41,42 @@ const Login: React.FC = () => {
   
   const verifyCaptcha = (isShow: boolean, captcha: string | undefined) => {
     setShowCaptcha(isShow)
-    if (!!captcha) {
+    if (captcha) {
       handleSubmit({ ...formRef.current, captcha });
-    } else {
-      message.error('验证码校验失败！');
     }
+    setSubmitting(false);
   }
 
-  const handleSubmit = async (values: API.LoginParams) => {
+  const handleSubmit = async (values: API.LoginRequest) => {
     try {
       // 登录
-      const msg = await login({ ...values });
-
-      if (msg.code === 200) {
+      const resp = await login(values);
+      if (resp.code === 200) {
         message.success('登录成功！');
         await fetchUserInfo();
         /** 此方法会跳转到 redirect 参数所在的位置 */
-
         if (!history) return;
         const { query } = history.location;
-        const { redirect } = query as {
-          redirect: string;
-        };
+        const { redirect } = query as { redirect: string };
         history.push(redirect || '/');
         return;
       }
-
-      setUserLoginState(msg);
+      setLoginState({
+        success: false,
+        message: resp.message
+      });
     } catch (error) {
       message.error('登录失败，请重试！');
     }
-    setSubmitting(false);
   };
 
-  const submitter = (values: API.LoginParams) => {
+  const submitter = (values: API.LoginRequest) => {
     setSubmitting(true);
-    setShowCaptcha(true)
     formRef.current = values
+    setShowCaptcha(true)
   }
 
-  const { code, message: errorMessage } = userLoginState || {};
+  const { success = true } = loginState || {};
   return (
     <LoginLayout showHome showRegister bacgImage={bacgImage}>
       <div className={styles.loginModal}>
@@ -88,7 +89,6 @@ const Login: React.FC = () => {
             searchConfig: {
               submitText: '登录',
             },
-            render: (_, dom) => dom.pop(),
             submitButtonProps: {
               loading: submitting,
               size: 'large',
@@ -98,12 +98,10 @@ const Login: React.FC = () => {
             },
           }}
           onFinish={async (values) => {
-            submitter(values as API.LoginParams);
+            submitter(values as API.LoginRequest);
           }}
         >
-          {code !== 200 && errorMessage && (
-            <LoginMessage content={errorMessage || '用户名和密码错误'} />
-          )}
+          {!success && <LoginMessage content={loginState?.message || '用户名和密码错误'} />}
           <ProFormText
             name="username"
             fieldProps={{
@@ -114,7 +112,7 @@ const Login: React.FC = () => {
             rules={[
               {
                 required: true,
-                message: '用户名是必填项！',
+                message: '请输入用户名！',
               },
             ]}
           />
@@ -128,26 +126,19 @@ const Login: React.FC = () => {
             rules={[
               {
                 required: true,
-                message: '密码是必填项！',
+                message: '请输入密码！',
               },
             ]}
           />
-          <div className={styles.sliderPopup} style={{ marginBottom: 24 }}>
-            <SlideCaptcha
-              isShow={showCaptcha}
-              verifyCaptcha={verifyCaptcha}
-            />
-          </div>
           <div style={{ marginBottom: 24 }}>
             <ProFormCheckbox noStyle name="autoLogin">
               自动登录
             </ProFormCheckbox>
-            <a style={{ float: 'right' }}>
-              忘记密码?
-            </a>
+            <a style={{ float: 'right' }}>忘记密码?</a>
           </div>
         </LoginForm>
       </div>
+      <SlideCaptcha isShow={showCaptcha} verifyCaptcha={verifyCaptcha} />
     </LoginLayout>
   );
 };

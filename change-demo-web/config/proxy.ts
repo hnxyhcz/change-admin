@@ -8,8 +8,8 @@
  */
 export default {
   dev: {
-    '/api/': {
-      target: 'http://localhost:8080/',
+    '/api': {
+      target: 'http://localhost:7000/',
       changeOrigin: true,
     },
   },

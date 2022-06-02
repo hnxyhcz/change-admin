@@ -23,7 +23,7 @@ const GlobalHeaderRight: React.FC = () => {
   return (
     <Space className={className}>
       <NoticeIconView />
-      <Avatar />
+      <Avatar menu />
     </Space>
   );
 };

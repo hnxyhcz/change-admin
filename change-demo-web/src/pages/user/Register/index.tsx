@@ -4,27 +4,25 @@ import { history, useModel } from 'umi';
 import { ProFormText, LoginForm, ProFormCaptcha } from '@ant-design/pro-form';
 import { LockOutlined, MobileOutlined, UserOutlined } from '@ant-design/icons';
 
-import { mobileCaptcha, register } from '@/services/rms/login';
-import { checkUsername } from '@/services/rms/rbac';
 import { MOBILE_REGEXP } from '@/utils/dict';
 import LoginLayout from '@/layouts/LoginLayout';
 
 import styles from '../index.less';
+import { checkUsernameExist, mobileCaptcha, register } from '@/services/login';
 
 const Login: React.FC = () => {
   const { initialState } = useModel<any>('@@initialState');
   const { settings: { logo, title, subject, bacgImage } } = initialState;
 
   const validateLoginName = async (_: any, value: string) => {
-    const resp = await checkUsername({ username: value });
-    if (resp.code === 200) {
-      return Promise.resolve();
-    } else {
+    const exist = await checkUsernameExist(value);
+    if (exist) {
       return Promise.reject(new Error('登录名已存在'));
     }
+    return Promise.resolve();
   }
 
-  const handleSubmit = async (values: API.RegisterParams) => {
+  const handleSubmit = async (values: API.RegisterRequest) => {
     const resp = await register(values);
     if (resp.code === 200) {
       message.success('注册成功！');
@@ -42,7 +40,7 @@ const Login: React.FC = () => {
           title={subject || title}
           logo={logo && <img alt="logo" src={logo} />}
           onFinish={async (values) => {
-            await handleSubmit(values as API.LoginParams);
+            await handleSubmit(values as API.RegisterRequest);
           }}
           submitter={{
             searchConfig: {

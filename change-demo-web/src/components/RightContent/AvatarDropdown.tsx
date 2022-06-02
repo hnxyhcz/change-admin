@@ -6,6 +6,7 @@ import { stringify } from 'querystring';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
 import type { MenuInfo } from 'rc-menu/lib/interface';
+import { ItemType } from 'antd/lib/menu/hooks/useItems';
 
 export type GlobalHeaderRightProps = {
   menu?: boolean;
@@ -14,7 +15,7 @@ export type GlobalHeaderRightProps = {
 /**
  * 退出登录，并且将当前的 url 保存
  */
-const loginOut = async () => {
+const logout = async () => {
   localStorage.removeItem('Authorization');
   const { query = {}, search, pathname } = history.location;
   const { redirect } = query;
@@ -37,7 +38,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
       const { key } = event;
       if (key === 'logout') {
         setInitialState((s) => ({ ...s, currentUser: undefined }));
-        loginOut();
+        logout();
         return;
       }
       history.push(`/account/${key}`);
@@ -67,30 +68,29 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
     return loading;
   }
 
-  const menuHeaderDropdown = (
-    <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
-      {menu && (
-        <Menu.Item key="center">
-          <UserOutlined />
-          个人中心
-        </Menu.Item>
-      )}
-      {menu && (
-        <Menu.Item key="settings">
-          <SettingOutlined />
-          个人设置
-        </Menu.Item>
-      )}
-      {menu && <Menu.Divider />}
-
-      <Menu.Item key="logout">
-        <LogoutOutlined />
-        退出登录
-      </Menu.Item>
-    </Menu>
-  );
+  const menuHeaderDropdown = () => {
+    let menuItems: ItemType[] = [
+      { key: 'logout', label: '退出登录', icon: <LogoutOutlined /> }
+    ]
+    if (menu) {
+      menuItems = [
+        { key: 'center', label: '个人中心', icon: <UserOutlined /> },
+        { key: 'settings', label: '个人设置', icon: <SettingOutlined /> },
+        { type: 'divider' },
+        ...menuItems,
+      ]
+    }
+    return (
+      <Menu
+        selectedKeys={[]}
+        className={styles.menu}
+        onClick={onMenuClick}
+        items={menuItems}
+      />
+    )
+    };
   return (
-    <HeaderDropdown overlay={menuHeaderDropdown}>
+    <HeaderDropdown overlay={menuHeaderDropdown()}>
       <span className={`${styles.action} ${styles.account}`}>
         <Avatar size="small" className={styles.avatar} src={currentUser.avatar || '/avatar.png'} alt="avatar" />
         <span className={`${styles.name} anticon`}>{currentUser.name}</span>

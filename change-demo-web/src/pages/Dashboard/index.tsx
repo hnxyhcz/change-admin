@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAccess, useModel } from 'umi';
+import { useModel } from 'umi';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Avatar, Card, Result, Skeleton, Statistic, Typography } from 'antd';
 
@@ -35,23 +35,20 @@ const greetContent = (userName: string | undefined) => {
 type ContentProps = {
   currentUser: Partial<API.CurrentUser | undefined>,
 }
+
 const PageHeaderContent: React.FC<ContentProps> = ({ currentUser }) => {
   const loading = currentUser && Object.keys(currentUser).length;
   if (!loading) {
     return <Skeleton avatar paragraph={{ rows: 1 }} active />;
   }
   return (
-    <div className={styles.pageHeaderContent} style={{ marginTop: '-12px' }} >
+    <div className={styles.pageHeaderContent} style={{ marginTop: '-12px' }}>
       <div className={styles.avatar}>
-        <Avatar size="large" src={currentUser?.avatar || '/avatar.png'} />
+        <Avatar size="large" src={'/avatar.png'} />
       </div>
       <div className={styles.content}>
-        <div className={styles.contentTitle2}>
-          {greetContent(currentUser?.name)}
-        </div>
-        <div>
-          最近登录时间：{moment()}
-        </div>
+        <div className={styles.contentTitle2}>{greetContent(currentUser?.name)}</div>
+        <div>最近登录时间：{moment().format('YYYY-MM-DD hh:mm:ss')}</div>
       </div>
     </div>
   );
@@ -68,7 +65,7 @@ export default (): React.ReactNode => {
       extraContent={
         <div className={styles.extraContent}>
           <div className={styles.statItem}>
-            <Statistic title={"访问次数"} value={9999} />
+            <Statistic title={'访问次数'} value={9999} />
           </div>
         </div>
       }
@@ -81,12 +78,10 @@ export default (): React.ReactNode => {
             </Typography.Text>
           }
           subTitle={
-            <Typography.Text style={{ fontSize: '16px' }}>
-              {settings?.description}
-            </Typography.Text>
+            <Typography.Text style={{ fontSize: '16px' }}>{settings?.description}</Typography.Text>
           }
         />
       </Card>
     </PageContainer>
-  )
+  );
 };

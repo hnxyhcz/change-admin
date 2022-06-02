@@ -1,0 +1,266 @@
+.ant3-tree {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  color: rgba(0, 0, 0, 0.65);
+  font-size: 14px;
+  line-height: 1.5;
+  list-style: none;
+  font-variant3: tabular-nums;
+  -webkit-font-feature-settings: 'tnum';
+  font-feature-settings: 'tnum';
+}
+
+.ant3-tree > li:last-child {
+  padding-bottom: 7px;
+}
+.ant3-tree > li:first-child {
+  padding-top: 7px;
+}
+.ant3-tree li {
+  margin: 0;
+  padding: 4px 0;
+  white-space: nowrap;
+  list-style: none;
+  outline: 0;
+}
+
+.ant3-tree li span.ant3-tree-switcher {
+  position: relative;
+}
+.ant3-tree li span.ant3-tree-switcher,
+.ant3-tree li span.ant3-tree-iconEle {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  line-height: 24px;
+  text-align: center;
+  vertical-align: top;
+  border: 0;
+  outline: none;
+  cursor: pointer;
+}
+
+.ant3-tree li span.ant3-tree-checkbox {
+  top: initial;
+  height: 24px;
+  margin: 0 4px 0 2px;
+  padding: 4px 0;
+}
+.ant3-tree-checkbox {
+  position: relative;
+  top: -0.09em;
+  display: inline-block;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  color: rgba(0, 0, 0, 0.65);
+  font-size: 14px;
+  font-variant: tabular-nums;
+  line-height: 1.5;
+  line-height: 1;
+  white-space: nowrap;
+  vertical-align: middle;
+  list-style: none;
+  outline: none;
+  cursor: pointer;
+  -webkit-font-feature-settings: 'tnum';
+  font-feature-settings: 'tnum';
+}
+
+.ant3-tree-checkbox {
+  position: relative;
+  top: -0.09em;
+  display: inline-block;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  color: rgba(0, 0, 0, 0.65);
+  font-size: 14px;
+  font-variant: tabular-nums;
+  line-height: 1.5;
+  line-height: 1;
+  white-space: nowrap;
+  vertical-align: middle;
+  list-style: none;
+  outline: none;
+  cursor: pointer;
+  -webkit-font-feature-settings: 'tnum';
+  font-feature-settings: 'tnum';
+}
+
+.ant3-tree-checkbox-checked .ant3-tree-checkbox-inner {
+  background-color: #1890ff;
+  border-color: #1890ff;
+}
+.ant3-tree-checkbox-inner {
+  position: relative;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 16px;
+  height: 16px;
+  background-color: #fff;
+  border: 1px solid #d9d9d9;
+  border-radius: 2px;
+  border-collapse: separate;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+
+.ant3-tree-checkbox-checked::after {
+  position: absolute;
+  top: 16.67%;
+  left: 0;
+  width: 100%;
+  height: 66.67%;
+}
+.ant3-tree-checkbox-checked::after {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 1px solid #1890ff;
+  border-radius: 2px;
+  visibility: hidden;
+  -webkit-animation: ant3CheckboxEffect 0.36s ease-in-out;
+  animation: ant3CheckboxEffect 0.36s ease-in-out;
+  -webkit-animation-fill-mode: backwards;
+  animation-fill-mode: backwards;
+  content: '';
+}
+
+.ant3-tree-checkbox-checked .ant3-tree-checkbox-inner::after {
+  position: absolute;
+  display: table;
+  border: 2px solid #fff;
+  border-top: 0;
+  border-left: 0;
+  -webkit-transform: rotate(45deg) scale(1) translate(-50%, -50%);
+  -ms-transform: rotate(45deg) scale(1) translate(-50%, -50%);
+  transform: rotate(45deg) scale(1) translate(-50%, -50%);
+  opacity: 1;
+  -webkit-transition: all 0.2s cubic-bezier(0.12, 0.4, 0.29, 1.46) 0.1s;
+  transition: all 0.2s cubic-bezier(0.12, 0.4, 0.29, 1.46) 0.1s;
+  content: ' ';
+}
+.ant3-tree-checkbox-inner::after {
+  position: absolute;
+  top: 50%;
+  left: 22%;
+  display: table;
+  width: 5.71428571px;
+  height: 9.14285714px;
+  border: 2px solid #fff;
+  border-top: 0;
+  border-left: 0;
+  -webkit-transform: rotate(45deg) scale(0) translate(-50%, -50%);
+  -ms-transform: rotate(45deg) scale(0) translate(-50%, -50%);
+  transform: rotate(45deg) scale(0) translate(-50%, -50%);
+  opacity: 0;
+  -webkit-transition: all 0.1s cubic-bezier(0.71, -0.46, 0.88, 0.6), opacity 0.1s;
+  transition: all 0.1s cubic-bezier(0.71, -0.46, 0.88, 0.6), opacity 0.1s;
+  content: ' ';
+}
+
+.ant3-tree li .ant3-tree-node-content-wrapper {
+  display: inline-block;
+  height: 24px;
+  margin: 0;
+  padding: 0 5px;
+  color: rgba(0, 0, 0, 0.65);
+  line-height: 24px;
+  text-decoration: none;
+  vertical-align: top;
+  border-radius: 2px;
+  cursor: pointer;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+
+.ant3-tree-checkbox + span {
+  padding-right: 8px;
+  padding-left: 8px;
+}
+
+.ant3-tree-checkbox-indeterminate .ant3-tree-checkbox-inner::after {
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  background-color: #1890ff;
+  border: 0;
+  -webkit-transform: translate(-50%, -50%) scale(1);
+  -ms-transform: translate(-50%, -50%) scale(1);
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+  content: ' ';
+}
+.ant3-tree-checkbox-indeterminate .ant3-tree-checkbox-inner {
+  background-color: #fff;
+  border-color: #d9d9d9;
+}
+
+.ant3-tree-checkbox-wrapper:hover .ant3-tree-checkbox-inner,
+.ant3-tree-checkbox:hover .ant3-tree-checkbox-inner,
+.ant3-tree-checkbox-input:focus + .ant3-tree-checkbox-inner {
+  border-color: #1890ff;
+}
+
+.ant3-tree li .ant3-tree-node-content-wrapper.ant3-tree-node-selected {
+  background-color: #bae7ff;
+}
+
+.ant3-tree li span.ant3-tree-switcher,
+.ant3-tree li span.ant3-tree-iconEle {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  line-height: 24px;
+  text-align: center;
+  vertical-align: top;
+  border: 0 none;
+  outline: none;
+  cursor: pointer;
+}
+.ant3-tree li span.ant3-tree-switcher.ant3-tree-switcher-noop {
+  cursor: default;
+}
+
+.ant3-tree li span.ant3-tree-switcher {
+  position: relative;
+}
+
+:root .ant3-tree li span.ant3-tree-switcher.ant3-tree-switcher_open .ant3-tree-switcher-icon,
+:root .ant3-tree li span.ant3-tree-switcher.ant3-tree-switcher_open .ant3-select-switcher-icon {
+  font-size: 12px;
+}
+.ant3-tree li span.ant3-tree-switcher.ant3-tree-switcher_open .ant3-tree-switcher-icon,
+.ant3-tree li span.ant3-tree-switcher.ant3-tree-switcher_open .ant3-select-switcher-icon {
+  display: inline-block;
+  font-weight: 700;
+  font-size: 12px;
+  -webkit-transform: scale(0.83333333) rotate(0deg);
+  -ms-transform: scale(0.83333333) rotate(0deg);
+  transform: scale(0.83333333) rotate(0deg);
+}
+
+:root .ant3-tree li span.ant3-tree-switcher.ant3-tree-switcher_close .ant3-tree-switcher-icon,
+:root .ant3-tree li span.ant3-tree-switcher.ant3-tree-switcher_close .ant3-select-switcher-icon {
+  font-size: 12px;
+}
+.ant3-tree li span.ant3-tree-switcher.ant3-tree-switcher_close .ant3-tree-switcher-icon,
+.ant3-tree li span.ant3-tree-switcher.ant3-tree-switcher_close .ant3-select-switcher-icon {
+  display: inline-block;
+  font-weight: 700;
+  font-size: 12px;
+  -webkit-transform: scale(0.83333333) rotate(0deg);
+  -ms-transform: scale(0.83333333) rotate(0deg);
+  transform: scale(0.83333333) rotate(0deg);
+}
