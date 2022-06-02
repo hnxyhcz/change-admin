@@ -1,9 +1,9 @@
 package io.example.data.domain.dto;
 
+import lombok.Data;
+
 import java.util.Date;
 import java.util.List;
-
-import lombok.Data;
 
 /**
  * @author javahuang
@@ -12,16 +12,16 @@ import lombok.Data;
 @Data
 public class RoleView {
 
-	private String id;
+    private String id;
 
-	private String name;
+    private String name;
 
-	private String code;
+    private String code;
 
-	private String remark;
+    private String remark;
 
-	private List<String> authorities;
+    private List<String> authorities;
 
-	private Date createAt;
+    private Date createAt;
 
 }

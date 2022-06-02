@@ -1,6 +1,6 @@
 package io.example.data.service;
 
-import io.example.data.domain.model.UserInfo;
+import io.example.data.domain.dto.CurrentUser;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,7 +16,7 @@ public interface TokenService {
      * @param request 请求
      * @return 当前请求登录用户
      */
-    UserInfo getCurrentUser(HttpServletRequest request);
+    CurrentUser getCurrentUser(HttpServletRequest request);
 
     /**
      * 创建accessToken
@@ -24,14 +24,14 @@ public interface TokenService {
      * @param user 登录用户
      * @return AccessToken
      */
-    String createAccessToken(UserInfo user);
+    String createAccessToken(CurrentUser user);
 
     /**
      * 刷新AccessToken令牌
      *
      * @param user 登录用户
      */
-    void refreshAccessToken(UserInfo user);
+    void refreshAccessToken(CurrentUser user);
 
     /**
      * 验证令牌有效期，相差不足20分钟，自动刷新缓存

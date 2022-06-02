@@ -4,7 +4,7 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import io.example.core.constant.CacheConsts;
 import io.example.core.security.TokenProperties;
-import io.example.data.domain.model.UserInfo;
+import io.example.data.domain.dto.CurrentUser;
 import io.example.data.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -27,12 +27,12 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class RedisTokenServiceImpl implements TokenService {
     private final TokenProperties properties;
-    private final RedisTemplate<String, UserInfo> redisTemplate;
+    private final RedisTemplate<String, CurrentUser> redisTemplate;
 
     /**
      * 缓存中获取当前用户
      */
-    public UserInfo getCurrentUser(HttpServletRequest request) {
+    public CurrentUser getCurrentUser(HttpServletRequest request) {
         String accessToken = getAccessToken(request);
         if (StringUtils.hasLength(accessToken)) {
             String tokenKey = getAccessTokenKey(accessToken);
@@ -44,7 +44,7 @@ public class RedisTokenServiceImpl implements TokenService {
     /**
      * 生成token
      */
-    public String createAccessToken(@NotNull UserInfo user) {
+    public String createAccessToken(@NotNull CurrentUser user) {
         String accessToken = IdUtil.fastUUID();
         user.setToken(accessToken);
         setUserAgent(user);
@@ -55,12 +55,12 @@ public class RedisTokenServiceImpl implements TokenService {
     /**
      * 刷新token过期时间
      *
-     * @param userInfo 登录用户
+     * @param currentUser 登录用户
      */
-    public void refreshAccessToken(@NotNull UserInfo userInfo) {
+    public void refreshAccessToken(@NotNull CurrentUser currentUser) {
         long expire = TimeUnit.MILLISECONDS.convert(properties.getExpireTime());
-        String userTokenKey = getAccessTokenKey(userInfo.getToken());
-        redisTemplate.opsForValue().set(userTokenKey, userInfo, expire, TimeUnit.MILLISECONDS);
+        String userTokenKey = getAccessTokenKey(currentUser.getToken());
+        redisTemplate.opsForValue().set(userTokenKey, currentUser, expire, TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -69,9 +69,9 @@ public class RedisTokenServiceImpl implements TokenService {
      * @param request 请求
      */
     public void verifyAccessToken(HttpServletRequest request) {
-        UserInfo userInfo = getCurrentUser(request);
-        if (Objects.nonNull(userInfo)) {
-            refreshAccessToken(userInfo);
+        CurrentUser currentUser = getCurrentUser(request);
+        if (Objects.nonNull(currentUser)) {
+            refreshAccessToken(currentUser);
         }
     }
 
@@ -130,7 +130,7 @@ public class RedisTokenServiceImpl implements TokenService {
      *
      * @param user 登录信息
      */
-    private void setUserAgent(UserInfo user) {
+    private void setUserAgent(CurrentUser user) {
         RequestAttributes attributes = RequestContextHolder.getRequestAttributes();
         if (null == attributes) {
             return;

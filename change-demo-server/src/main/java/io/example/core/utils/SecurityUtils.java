@@ -2,7 +2,7 @@ package io.example.core.utils;
 
 import io.example.core.constant.AppConsts;
 import io.example.core.security.WebSecurityConfig;
-import io.example.data.domain.model.UserInfo;
+import io.example.data.domain.dto.CurrentUser;
 import lombok.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.security.core.Authentication;
@@ -20,17 +20,17 @@ public class SecurityUtils {
     /**
      * 获取当前登录的用户
      *
-     * @return {@link UserInfo}
+     * @return {@link CurrentUser}
      */
-    public static UserInfo getCurrentUser() {
+    public static CurrentUser getCurrentUser() {
         if (getAuthentication() == null) {
-            return new UserInfo(AppConsts.ANONYMOUS_USER_ID);
+            return new CurrentUser(AppConsts.ANONYMOUS_USER_ID);
         }
         Object principal = getAuthentication().getPrincipal();
-        if (principal instanceof UserInfo) {
-            return (UserInfo) principal;
+        if (principal instanceof CurrentUser) {
+            return (CurrentUser) principal;
         }
-        return new UserInfo(AppConsts.ANONYMOUS_USER_ID);
+        return new CurrentUser(AppConsts.ANONYMOUS_USER_ID);
     }
 
     /**

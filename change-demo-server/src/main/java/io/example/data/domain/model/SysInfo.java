@@ -6,35 +6,52 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 用户角色关联
+ * 系统信息
  *
- * @TableName t_user_role
+ * @TableName t_sys_info
  */
-@TableName(value = "t_user_role")
+@TableName(value = "t_sys_info")
 @Data
-public class UserRole implements Serializable {
+public class SysInfo implements Serializable {
     /**
-     * ID
+     * 主键
      */
     @TableId(value = "id")
     private String id;
 
     /**
-     * 用户ID
+     * 系统名称
      */
-    @TableField(value = "user_id")
-    private String userId;
+    @TableField(value = "title")
+    private String title;
 
     /**
-     * 角色ID
+     * 系统版本号
      */
-    @TableField(value = "role_id")
-    private String roleId;
+    @TableField(value = "version")
+    private String version;
+
+    /**
+     * 系统描述信息
+     */
+    @TableField(value = "description")
+    private String description;
+
+    /**
+     * 图标
+     */
+    @TableField(value = "logo")
+    private String logo;
+
+    /**
+     * 图标
+     */
+    @TableField(value = "bacg_image")
+    private String bacgImage;
 
     /**
      * 创建时间
@@ -60,7 +77,6 @@ public class UserRole implements Serializable {
     @TableField(value = "update_by", fill = FieldFill.UPDATE)
     private String updateBy;
 
-    @Serial
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

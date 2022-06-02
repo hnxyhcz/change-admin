@@ -1,4 +1,4 @@
-package io.example.web.api;
+package io.example.web.controller;
 
 import com.anji.captcha.model.common.ResponseModel;
 import com.anji.captcha.model.vo.CaptchaVO;
@@ -8,10 +8,10 @@ import io.example.core.constant.ErrorCodeEnum;
 import io.example.core.constant.ResponseStatus;
 import io.example.core.entity.ResponseResult;
 import io.example.core.exception.InternalServerException;
-import io.example.core.utils.SecurityUtils;
+import io.example.core.utils.IPUtils;
 import io.example.data.domain.dto.AuthRequest;
+import io.example.data.domain.dto.CurrentUser;
 import io.example.data.domain.dto.UserRequest;
-import io.example.data.domain.model.UserInfo;
 import io.example.data.service.UserService;
 import io.example.data.service.impl.RedisTokenServiceImpl;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,6 +24,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 /**
@@ -34,7 +35,7 @@ import javax.validation.Valid;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api")
-public class AuthApi {
+public class AuthController {
 
     private final RedisTokenServiceImpl tokenService;
     private final UserService userService;
@@ -66,8 +67,8 @@ public class AuthApi {
             throw new InternalServerException(ErrorCodeEnum.USERNAME_PASSWORD_ERROR, ex);
         }
         // 生成token
-        UserInfo userInfo = (UserInfo) authenticate.getPrincipal();
-        String token = tokenService.createAccessToken(userInfo);
+        CurrentUser currentUser = (CurrentUser) authenticate.getPrincipal();
+        String token = tokenService.createAccessToken(currentUser);
         return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, token).body(ResponseResult.success(token));
     }
 
@@ -79,13 +80,22 @@ public class AuthApi {
         userService.createUser(request);
     }
 
-    /**
-     * 获取当前用户信息
-     *
-     * @return 用户信息
-     */
-    @GetMapping("currentUser")
-    public UserInfo currentUser() {
-        return SecurityUtils.getCurrentUser();
+    @GetMapping("public/checkUsername")
+    public boolean checkUsernameExist(String username) {
+        return userService.checkUsernameExist(username);
     }
+
+    @PostMapping({"captcha/get"})
+    public ResponseModel get(@RequestBody CaptchaVO data, HttpServletRequest request) {
+        assert request.getRemoteHost() != null;
+        data.setBrowserInfo(IPUtils.getRemoteId(request));
+        return this.captchaService.get(data);
+    }
+
+    @PostMapping({"captcha/check"})
+    public ResponseModel check(@RequestBody CaptchaVO data, HttpServletRequest request) {
+        data.setBrowserInfo(IPUtils.getRemoteId(request));
+        return this.captchaService.check(data);
+    }
+
 }

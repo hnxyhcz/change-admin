@@ -70,7 +70,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // 设置接口权限，permitAll之后仍然会走过滤器
         http.authorizeRequests()
                 .antMatchers("/api/**").authenticated()
-                .antMatchers("/").permitAll();
+                .antMatchers("/").permitAll()
         ;
 
         // 登出

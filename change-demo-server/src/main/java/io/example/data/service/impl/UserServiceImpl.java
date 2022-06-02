@@ -12,10 +12,7 @@ import io.example.core.exception.InternalServerException;
 import io.example.core.security.PreAuthorizeAnnotationExtractor;
 import io.example.core.utils.PageUtils;
 import io.example.core.utils.SecurityUtils;
-import io.example.data.domain.dto.CommDictItemView;
-import io.example.data.domain.dto.UserQuery;
-import io.example.data.domain.dto.UserRequest;
-import io.example.data.domain.dto.UserView;
+import io.example.data.domain.dto.*;
 import io.example.data.domain.mapper.RoleViewMapper;
 import io.example.data.domain.mapper.UserViewMapper;
 import io.example.data.domain.model.*;
@@ -57,7 +54,7 @@ public class UserServiceImpl extends BaseService<UserMapper, User, UserView> imp
      * @param username 账号密码登录认证使用
      */
     @Override
-    public UserInfo loadUserByUsername(String username) throws UsernameNotFoundException {
+    public CurrentUser loadUserByUsername(String username) throws UsernameNotFoundException {
         LambdaQueryWrapper<Account> queryWrapper = Wrappers.<Account>lambdaQuery().eq(Account::getAuthAccount, username);
         Account existAccount = accountMapper.selectOne(queryWrapper);
         if (existAccount == null) {
@@ -68,15 +65,15 @@ public class UserServiceImpl extends BaseService<UserMapper, User, UserView> imp
             throw new AccessDeniedException(format("用户: %s, 被禁用", username));
         }
 
-        UserInfo userInfo = loadUserInfo(user);
-        userInfo.setUsername(username);
-        userInfo.setPassword(existAccount.getAuthSecret());
-        return userInfo;
+        CurrentUser currentUser = loadUserInfo(user);
+        currentUser.setUsername(username);
+        currentUser.setPassword(existAccount.getAuthSecret());
+        return currentUser;
     }
 
     @Override
     @Cacheable(cacheNames = CacheConsts.USER_CACHE_NAME, key = "#p0", condition = "#p0!=null", unless = "#result == null")
-    public UserInfo loadUserById(String userId) {
+    public CurrentUser loadUserById(String userId) {
         User user = this.getById(userId);
         if (user == null) {
             return null;
@@ -84,8 +81,8 @@ public class UserServiceImpl extends BaseService<UserMapper, User, UserView> imp
         return loadUserInfo(user);
     }
 
-    private UserInfo loadUserInfo(User user) {
-        UserInfo userInfo = userViewMapper.toUserInfo(user);
+    private CurrentUser loadUserInfo(User user) {
+        CurrentUser currentUser = userViewMapper.toUserInfo(user);
         List<Role> roles = userRoleMapper
                 .selectList(Wrappers.<UserRole>lambdaQuery().eq(UserRole::getUserId, user.getId()))
                 .stream().map(ur -> roleService.getById(ur.getRoleId()))
@@ -104,17 +101,17 @@ public class UserServiceImpl extends BaseService<UserMapper, User, UserView> imp
                 authorities.addAll(Arrays.asList(role.getAuthority().split(",")));
             });
         }
-        userInfo.setAuthorityList(authorities);
+        currentUser.setAuthorityList(authorities);
 
         // 设置用户单位
         if (user.getLccCode() != null) {
             Lcc lcc = lccService.getById(user.getLccCode());
             if (lcc != null) {
-                userInfo.setLccName(lcc.getLccName());
+                currentUser.setLccName(lcc.getLccName());
             }
         }
 
-        return userInfo;
+        return currentUser;
     }
 
     @Override
@@ -127,7 +124,9 @@ public class UserServiceImpl extends BaseService<UserMapper, User, UserView> imp
             UserView userView = userViewMapper.toView(x);
             Account account = accountMapper
                     .selectOne(Wrappers.<Account>lambdaQuery().eq(Account::getUserId, x.getId()));
-            userView.setUsername(account.getAuthAccount());
+            if (account != null) {
+                userView.setUsername(account.getAuthAccount());
+            }
             // 设置用户部门
             Lcc lcc = lccService.getById(x.getLccCode());
             if (lcc != null) {
@@ -202,7 +201,9 @@ public class UserServiceImpl extends BaseService<UserMapper, User, UserView> imp
             if (isNotBlank(request.getPassword())) {
                 account.setAuthSecret(SecurityUtils.getPasswordEncoder().encode(request.getPassword()));
             }
-            accountMapper.updateById(account);
+            if (account != null) {
+                accountMapper.updateById(account);
+            }
         }
 
         // 更新用户角色

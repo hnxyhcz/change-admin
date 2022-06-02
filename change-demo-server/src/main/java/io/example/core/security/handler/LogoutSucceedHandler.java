@@ -2,7 +2,7 @@ package io.example.core.security.handler;
 
 import io.example.core.entity.ResponseResult;
 import io.example.core.utils.JsonUtils;
-import io.example.data.domain.model.UserInfo;
+import io.example.data.domain.dto.CurrentUser;
 import io.example.data.service.impl.RedisTokenServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -27,7 +27,7 @@ public class LogoutSucceedHandler implements LogoutSuccessHandler {
     @SneakyThrows
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        UserInfo loginUser = tokenService.getCurrentUser(request);
+        CurrentUser loginUser = tokenService.getCurrentUser(request);
         if (null != loginUser) {
             tokenService.delLoginUser(request);
         }

@@ -1,4 +1,4 @@
-package io.example.data.domain.model;
+package io.example.data.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  * @since 2022/5/26 11:47
  */
 @Data
-public class UserInfo implements UserDetails, Serializable {
+public class CurrentUser implements UserDetails, Serializable {
 
     /**
      * 用户id
@@ -66,17 +66,15 @@ public class UserInfo implements UserDetails, Serializable {
     @JsonIgnore
     private String password;
 
-    private List<String> menuList;
-
     private List<String> authorityList;
 
     @JsonIgnore
     private Set<GrantedAuthority> authorities = new HashSet<>();
 
-    public UserInfo() {
+    public CurrentUser() {
     }
 
-    public UserInfo(String username) {
+    public CurrentUser(String username) {
         this.username = username;
     }
 
@@ -147,10 +145,10 @@ public class UserInfo implements UserDetails, Serializable {
         this.status = status;
     }
 
-    public UserInfo simpleMode() {
-        UserInfo userInfo = new UserInfo();
-        BeanUtils.copyProperties(this, userInfo, "authorityList");
-        return userInfo;
+    public CurrentUser simpleMode() {
+        CurrentUser currentUser = new CurrentUser();
+        BeanUtils.copyProperties(this, currentUser, "authorityList");
+        return currentUser;
     }
 
 }

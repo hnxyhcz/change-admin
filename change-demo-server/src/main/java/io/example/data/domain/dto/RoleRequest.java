@@ -1,8 +1,8 @@
 package io.example.data.domain.dto;
 
-import java.util.List;
-
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * @author javahuang
@@ -11,15 +11,17 @@ import lombok.Data;
 @Data
 public class RoleRequest {
 
-	private String id;
+    private String id;
 
-	private String name;
+    private String name;
 
-	private String code;
+    private String code;
 
-	private String remark;
+    private String remark;
 
-	/** 权限编码列表 */
-	private List<String> authorities;
+    /**
+     * 权限编码列表
+     */
+    private List<String> authorities;
 
 }
