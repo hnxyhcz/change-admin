@@ -68,11 +68,13 @@ declare namespace API {
     type?: NoticeIconItemType;
   };
 
-  type Setting = {
+  type SystemInfo = {
+    id?: string;
     logo?: string;
-    subject?: string;
+    title?: string;
     description?: string;
     bacgImage?: string;
+    version?: string;
   };
 
   type SliderCaptchaModel = {

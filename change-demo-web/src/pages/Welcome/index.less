@@ -2,10 +2,11 @@
 
 .subTitle {
   color: #fff;
-  font-size: 18px;
-  margin-top: 16px;
+  font-size: 44px;
   line-height: 32px;
-  text-align: justify;
+  text-align: center;
+  margin: 24px auto 48px auto;
+  font-weight: lighter;
 }
 
 .writeBtn {
@@ -19,10 +20,20 @@
   font-size: 18px;
   line-height: 30px;
   text-align: center;
-  padding: 11px 0;
+  padding: 12px 0;
 }
 
 .writeBtn:hover {
   color: #fff;
   background-color: @primary-color-hover
+}
+
+.content {
+  margin-top: 256px;
+}
+
+@media (min-width: @screen-xxl-min) {
+  .content {
+    margin-top: 48px;
+  }
 }

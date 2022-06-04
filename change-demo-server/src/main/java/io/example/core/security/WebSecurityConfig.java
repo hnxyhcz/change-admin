@@ -57,6 +57,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // ignore是完全绕过了spring security的所有filter
         web.ignoring().antMatchers("/api/public/**");
         web.ignoring().antMatchers("/api/captcha/**");
+        web.ignoring().antMatchers("/api/system/setting");
     }
 
     @Override

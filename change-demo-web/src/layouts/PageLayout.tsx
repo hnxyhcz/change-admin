@@ -2,7 +2,7 @@ import { AppContext } from '@/shared';
 import AppStore from '@/store/AppStore';
 import React, { useMemo } from 'react';
 
-export const AppLayout: React.FC = (props) => {
+export const PageLayout: React.FC = (props) => {
   const appStore = useMemo(() => new AppStore(), []);
 
   return (
@@ -12,4 +12,4 @@ export const AppLayout: React.FC = (props) => {
   );
 };
 
-export default AppLayout;
+export default PageLayout;

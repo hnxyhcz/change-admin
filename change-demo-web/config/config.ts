@@ -62,7 +62,7 @@ export default defineConfig({
   nodeModulesTransform: {
     type: 'none',
   },
-  title: '前端基础脚手架',
+  title: 'Hello World',
   // mfsu: {},
   // webpack5: {},
   // exportStatic: {},

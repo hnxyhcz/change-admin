@@ -18,7 +18,17 @@ import { getCurrentUser } from './services/user';
 import moment from 'moment';
 import 'moment/locale/zh-cn';
 import 'antd/es/date-picker/style/index';
+import { getSystemInfo } from './services/system';
 moment.locale('zh-cn');
+
+export interface InitialStateProps {
+  settings?: Partial<LayoutSettings>;
+  currentUser?: API.CurrentUser;
+  systemInfo?: API.SystemInfo;
+  loading?: boolean;
+  fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
+  fetchSystemInfo?: () => Promise<API.SystemInfo | undefined>;
+}
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -68,12 +78,7 @@ const getOwnMenuData = (menuData: MenuDataItem[], authorityList: string[]): Menu
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
  * */
-export async function getInitialState(): Promise<{
-  settings?: Partial<LayoutSettings & API.Setting>;
-  currentUser?: API.CurrentUser;
-  loading?: boolean;
-  fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
-}> {
+export async function getInitialState(): Promise<InitialStateProps> {
   const fetchUserInfo = async () => {
     try {
       return await getCurrentUser();
@@ -82,17 +87,27 @@ export async function getInitialState(): Promise<{
     }
     return undefined;
   };
+  // 系统设置
+  const fetchSystemInfo = async () => {
+    const systemInfo = await getSystemInfo();
+    return systemInfo || defaultSettings;
+  };
+  const systemInfo = await fetchSystemInfo();
   // 非免登录访问的页面
   if (!anonRouters.includes(history.location.pathname)) {
     const currentUser = await fetchUserInfo();
     return {
-      fetchUserInfo,
+      systemInfo,
       currentUser,
+      fetchUserInfo,
+      fetchSystemInfo,
       settings: defaultSettings,
     };
   }
   return {
+    systemInfo,
     fetchUserInfo,
+    fetchSystemInfo,
     settings: defaultSettings,
   };
 }
@@ -112,15 +127,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     },
     menu: {
       locale: false,
-      // 只要 params 改变就会执行 request 获取数据
-      // params: {
-      //   userId: initialState?.currentUser?.userId,
-      //   authorityList: initialState?.currentUser?.authorityList,
-      // },
-      // request: async (params, defaultMenuData) => {
-      //   const authorityList = params.authorityList || [];
-      //   return getOwnMenuData(defaultMenuData, authorityList);
-      // },
     },
     links: isDev ? docsLink : [],
     menuHeaderRender: undefined,
@@ -133,7 +139,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
               enableDarkTheme
               settings={initialState?.settings}
               onSettingChange={(settings) => {
-                setInitialState((preInitialState) => ({
+                setInitialState((preInitialState: any) => ({
                   ...preInitialState,
                   settings,
                 }));
@@ -144,6 +150,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       );
     },
     ...initialState?.settings,
-    logo: initialState?.settings?.logo || false,
+    ...initialState?.systemInfo,
+    logo: initialState?.systemInfo?.logo || false,
   };
 };

@@ -1,8 +1,6 @@
 import { Settings as LayoutSettings } from '@ant-design/pro-layout';
 
-const Settings: LayoutSettings & API.Setting & {
-  pwa?: boolean;
-} = {
+const Settings: LayoutSettings & API.SystemInfo & { pwa?: boolean } = {
   navTheme: 'light',
   // 拂晓蓝
   primaryColor: '#1890ff',
@@ -11,13 +9,11 @@ const Settings: LayoutSettings & API.Setting & {
   fixedHeader: false,
   fixSiderbar: true,
   colorWeak: false,
-  title: '前端基础脚手架',
   pwa: false,
-  logo: '/logo.png',
   iconfontUrl: '',
-  // 自定义属性
-  subject: '前端基础脚手架',
-  description: 'Hello World',
+  logo: '/logo.png',
+  title: 'Hello World',
+  description: '想你所想，不止于功能',
   bacgImage: 'https://image.wjx.com/images/newimg/register-login/bacg.jpg',
 };
 

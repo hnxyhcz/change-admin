@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "前端基础脚手架",
+    "title": "Hello World",
     "version": "1.0.0"
   },
   "servers": [

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { history } from 'umi';
-import { message, notification } from 'antd';
+import { notification } from 'antd';
 import queryString from 'query-string';
 
 import type { AxiosRequestConfig, AxiosResponseHeaders } from 'axios';
@@ -104,7 +104,7 @@ const transformResponse = (response: any, headers?: AxiosResponseHeaders) => {
     history.push(`/user/login`);
   }
   if (resp.code === 500) {
-    message.error('操作失败')
+    // message.error('操作失败')
   }
   return resp;
 };
@@ -259,4 +259,5 @@ export const System = {
   Role: '/api/system/role',
   Permission: '/api/system/permission',
   Oplog: '/api/system/oplogs',
+  Setting: '/api/system/setting'
 };

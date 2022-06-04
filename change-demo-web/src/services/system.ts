@@ -1,5 +1,10 @@
 import api, { System } from './api';
 
+/** 系统设置 GET /api/system/setting */
+export async function getSystemInfo() {
+  return api.get<API.SystemInfo>(System.Setting);
+}
+
 /** 角色列表 GET /api/system/role */
 export async function loadRoles(query: API.RoleRequest) {
   return api.getWithPagination<API.Role, API.RoleRequest>(System.Role, query);
@@ -45,6 +50,7 @@ export async function updateUser(user: Partial<API.SystemUser>) {
   return api.patch(`${System.User}/${user.id}`, user);
 }
 
+/** 查询操作日志 GET /api/system/oplogs */
 export async function loadOplogs(query: API.OplogRequest) {
   return api.getWithPagination<API.Oplog, API.OplogRequest>(System.Oplog, query);
 }

@@ -2,11 +2,22 @@ export default [
   {
     path: '/welcome',
     layout: false,
-    component: './Welcome',
+    component: '@/layouts/BasicLayout',
+    routes: [
+      {
+        name: '欢迎页',
+        path: '/welcome',
+        showLogin: true,
+        showRegister: true,
+        component: './Welcome',
+      },
+    ],
   },
   {
     path: '/user',
+    flatMenu: true,
     layout: false,
+    component: '@/layouts/BasicLayout',
     routes: [
       {
         path: '/user',
@@ -15,11 +26,15 @@ export default [
             name: '登录',
             path: '/user/login',
             component: './user/Login',
+            showHome: true,
+            showRegister: true,
           },
           {
             name: '注册',
             path: '/user/register',
             component: './user/Register',
+            showHome: true,
+            showLogin: true,
           },
         ],
       },
@@ -30,7 +45,7 @@ export default [
   {
     path: '/',
     flatMenu: true,
-    component: '@/layouts/AppLayout',
+    component: '@/layouts/PageLayout',
     routes: [
       {
         path: '/dashboard',
@@ -44,7 +59,6 @@ export default [
         path: '/setting',
         access: 'routeFilter',
         authority: 'system',
-        component: '@/layouts/AppLayout',
         routes: [
           {
             name: '人员管理',

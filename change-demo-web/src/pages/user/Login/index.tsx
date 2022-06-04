@@ -4,10 +4,9 @@ import React, { useRef, useState } from 'react';
 import { ProFormCheckbox, ProFormText, LoginForm } from '@ant-design/pro-form';
 import { history, useModel } from 'umi';
 
-import SlideCaptcha from '@/components/SliderCaptcha';
-import LoginLayout from '@/layouts/LoginLayout';
-import styles from '../index.less';
 import { login } from '@/services/login';
+import SlideCaptcha from '@/components/SliderCaptcha';
+import styles from '../index.less';
 
 type LoginStateType = {
   success: boolean
@@ -25,7 +24,7 @@ const LoginMessage: React.FC<{ content: string }> = ({ content }) => (
 
 const Login: React.FC = () => {
   const { initialState, setInitialState } = useModel<any>('@@initialState');
-  const { settings: { logo, title, subject, bacgImage } } = initialState;
+  const { systemInfo: { logo, title } } = initialState;
   const formRef = useRef<API.LoginRequest>()
   const [submitting, setSubmitting] = useState(false);
   const [showCaptcha, setShowCaptcha] = useState(false);
@@ -78,68 +77,66 @@ const Login: React.FC = () => {
 
   const { success = true } = loginState || {};
   return (
-    <LoginLayout showHome showRegister bacgImage={bacgImage}>
-      <div className={styles.loginModal}>
-        <LoginForm
-          style={{ marginTop: '32px' }}
-          title={subject || title}
-          initialValues={{ autoLogin: true }}
-          logo={logo && <img alt="logo" src={logo} />}
-          submitter={{
-            searchConfig: {
-              submitText: '登录',
+    <div className={styles.loginModal}>
+      <LoginForm
+        style={{ marginTop: '32px' }}
+        title={title}
+        initialValues={{ autoLogin: true }}
+        logo={logo && <img alt="logo" src={logo} />}
+        submitter={{
+          searchConfig: {
+            submitText: '登录',
+          },
+          submitButtonProps: {
+            loading: submitting,
+            size: 'large',
+            style: {
+              width: '100%',
             },
-            submitButtonProps: {
-              loading: submitting,
-              size: 'large',
-              style: {
-                width: '100%',
-              },
+          },
+        }}
+        onFinish={async (values) => {
+          submitter(values as API.LoginRequest);
+        }}
+      >
+        {!success && <LoginMessage content={loginState?.message || '用户名和密码错误'} />}
+        <ProFormText
+          name="username"
+          fieldProps={{
+            size: 'large',
+            prefix: <UserOutlined className={styles.prefixIcon} />,
+          }}
+          placeholder={'用户名'}
+          rules={[
+            {
+              required: true,
+              message: '请输入用户名！',
             },
+          ]}
+        />
+        <ProFormText.Password
+          name="password"
+          fieldProps={{
+            size: 'large',
+            prefix: <LockOutlined className={styles.prefixIcon} />,
           }}
-          onFinish={async (values) => {
-            submitter(values as API.LoginRequest);
-          }}
-        >
-          {!success && <LoginMessage content={loginState?.message || '用户名和密码错误'} />}
-          <ProFormText
-            name="username"
-            fieldProps={{
-              size: 'large',
-              prefix: <UserOutlined className={styles.prefixIcon} />,
-            }}
-            placeholder={'用户名'}
-            rules={[
-              {
-                required: true,
-                message: '请输入用户名！',
-              },
-            ]}
-          />
-          <ProFormText.Password
-            name="password"
-            fieldProps={{
-              size: 'large',
-              prefix: <LockOutlined className={styles.prefixIcon} />,
-            }}
-            placeholder={'密码'}
-            rules={[
-              {
-                required: true,
-                message: '请输入密码！',
-              },
-            ]}
-          />
-          <div style={{ marginBottom: 24 }}>
-            <ProFormCheckbox noStyle name="autoLogin">
-              自动登录
-            </ProFormCheckbox>
-            <a style={{ float: 'right' }}>忘记密码?</a>
-          </div>
-        </LoginForm>
-      </div>
+          placeholder={'密码'}
+          rules={[
+            {
+              required: true,
+              message: '请输入密码！',
+            },
+          ]}
+        />
+        <div style={{ marginBottom: 24 }}>
+          <ProFormCheckbox noStyle name="autoLogin">
+            自动登录
+          </ProFormCheckbox>
+          <a style={{ float: 'right' }}>忘记密码?</a>
+        </div>
+      </LoginForm>
       <SlideCaptcha isShow={showCaptcha} verifyCaptcha={verifyCaptcha} />
-    </LoginLayout>
+    </div>
   );
 };
 
