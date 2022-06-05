@@ -65,7 +65,7 @@ public class UserServiceImpl extends BaseService<UserMapper, User, UserView> imp
             throw new AccessDeniedException(format("用户: %s, 被禁用", username));
         }
 
-        CurrentUser currentUser = loadUserInfo(user);
+        CurrentUser currentUser = loadCurrent(user);
         currentUser.setUsername(username);
         currentUser.setPassword(existAccount.getAuthSecret());
         return currentUser;
@@ -78,10 +78,10 @@ public class UserServiceImpl extends BaseService<UserMapper, User, UserView> imp
         if (user == null) {
             return null;
         }
-        return loadUserInfo(user);
+        return loadCurrent(user);
     }
 
-    private CurrentUser loadUserInfo(User user) {
+    private CurrentUser loadCurrent(User user) {
         CurrentUser currentUser = userViewMapper.toUserInfo(user);
         List<Role> roles = userRoleMapper
                 .selectList(Wrappers.<UserRole>lambdaQuery().eq(UserRole::getUserId, user.getId()))

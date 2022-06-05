@@ -1,10 +1,14 @@
 package io.example.data.service.impl;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.extra.servlet.ServletUtil;
+import cn.hutool.http.useragent.UserAgent;
+import cn.hutool.http.useragent.UserAgentUtil;
 import io.example.core.constant.CacheConsts;
 import io.example.core.security.TokenProperties;
-import io.example.data.domain.dto.CurrentUser;
+import io.example.core.utils.SecurityUtils;
+import io.example.data.domain.dto.TokenUser;
 import io.example.data.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +20,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Objects;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -27,12 +31,12 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class RedisTokenServiceImpl implements TokenService {
     private final TokenProperties properties;
-    private final RedisTemplate<String, CurrentUser> redisTemplate;
+    private final RedisTemplate<String, TokenUser> redisTemplate;
 
     /**
      * 缓存中获取当前用户
      */
-    public CurrentUser getCurrentUser(HttpServletRequest request) {
+    public TokenUser getTokenUser(HttpServletRequest request) {
         String accessToken = getAccessToken(request);
         if (StringUtils.hasLength(accessToken)) {
             String tokenKey = getAccessTokenKey(accessToken);
@@ -44,23 +48,25 @@ public class RedisTokenServiceImpl implements TokenService {
     /**
      * 生成token
      */
-    public String createAccessToken(@NotNull CurrentUser user) {
-        String accessToken = IdUtil.fastUUID();
-        user.setToken(accessToken);
-        setUserAgent(user);
-        refreshAccessToken(user);
-        return accessToken;
+    public String createAccessToken() {
+        String userId = SecurityUtils.getUserId();
+        TokenUser tokenUser = new TokenUser(userId, IdUtil.fastUUID());
+        tokenUser.setLoginTime(new Date());
+        setUserAgent(tokenUser);
+        refreshAccessToken(tokenUser);
+        return tokenUser.getToken();
     }
 
     /**
      * 刷新token过期时间
      *
-     * @param currentUser 登录用户
+     * @param user 登录用户
      */
-    public void refreshAccessToken(@NotNull CurrentUser currentUser) {
+    public void refreshAccessToken(@NotNull TokenUser user) {
         long expire = TimeUnit.MILLISECONDS.convert(properties.getExpireTime());
-        String userTokenKey = getAccessTokenKey(currentUser.getToken());
-        redisTemplate.opsForValue().set(userTokenKey, currentUser, expire, TimeUnit.MILLISECONDS);
+        user.setExpireTime(DateUtil.offsetMillisecond(user.getLoginTime(), (int) expire));
+        String userTokenKey = getAccessTokenKey(user.getToken());
+        redisTemplate.opsForValue().set(userTokenKey, user, expire, TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -69,9 +75,9 @@ public class RedisTokenServiceImpl implements TokenService {
      * @param request 请求
      */
     public void verifyAccessToken(HttpServletRequest request) {
-        CurrentUser currentUser = getCurrentUser(request);
-        if (Objects.nonNull(currentUser)) {
-            refreshAccessToken(currentUser);
+        TokenUser user = getTokenUser(request);
+        if (user != null) {
+            refreshAccessToken(user);
         }
     }
 
@@ -80,7 +86,7 @@ public class RedisTokenServiceImpl implements TokenService {
      *
      * @param request 请求
      */
-    public void delLoginUser(HttpServletRequest request) {
+    public void delTokenUser(HttpServletRequest request) {
         String accessToken = getAccessToken(request);
         if (StringUtils.hasLength(accessToken)) {
             deleteAccessToken(accessToken);
@@ -126,18 +132,18 @@ public class RedisTokenServiceImpl implements TokenService {
 
     /**
      * 设置用户代理信息
-     * <p>TODO 设置登录日志存储的ip等信息</p>
-     *
-     * @param user 登录信息
      */
-    private void setUserAgent(CurrentUser user) {
+    private void setUserAgent(TokenUser user) {
         RequestAttributes attributes = RequestContextHolder.getRequestAttributes();
         if (null == attributes) {
             return;
         }
         if (attributes instanceof ServletRequestAttributes) {
             HttpServletRequest request = ((ServletRequestAttributes) attributes).getRequest();
-            String ip = ServletUtil.getClientIP(request);
+            UserAgent userAgent = UserAgentUtil.parse(request.getHeader("User-Agent"));
+            user.setIpaddr(ServletUtil.getClientIP(request));
+            user.setBrowser(userAgent.getBrowser().getName());
+            user.setOs(userAgent.getOs().getName());
         }
     }
 }

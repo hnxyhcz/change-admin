@@ -2,6 +2,7 @@ package io.example.core.security.filter;
 
 import io.example.core.utils.SecurityUtils;
 import io.example.data.domain.dto.CurrentUser;
+import io.example.data.domain.dto.TokenUser;
 import io.example.data.service.impl.RedisTokenServiceImpl;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -29,13 +30,15 @@ public class AuthenticateTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
-        CurrentUser currentUser = tokenService.getCurrentUser(request);
+        TokenUser tokenUser = tokenService.getTokenUser(request);
 
-        if (!Objects.isNull(currentUser) && Objects.isNull(SecurityUtils.getAuthentication())) {
+        if (!Objects.isNull(tokenUser) && Objects.isNull(SecurityUtils.getAuthentication())) {
+            // 刷新token
             tokenService.verifyAccessToken(request);
+            
+            CurrentUser currentUser = SecurityUtils.getCurrentUser();
             UsernamePasswordAuthenticationToken authenticationToken
-                    = new UsernamePasswordAuthenticationToken(currentUser, null,
-                    currentUser.getAuthorities());
+                    = new UsernamePasswordAuthenticationToken(currentUser, null, currentUser.getAuthorities());
             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         }

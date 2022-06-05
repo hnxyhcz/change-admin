@@ -50,8 +50,6 @@ public class CurrentUser implements UserDetails, Serializable {
 
     private String email;
 
-    private String token;
-
     private Boolean enabled;
 
     @JsonIgnore
