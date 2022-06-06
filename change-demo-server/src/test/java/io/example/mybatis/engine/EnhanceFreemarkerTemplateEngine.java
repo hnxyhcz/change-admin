@@ -1,4 +1,4 @@
-package io.example.mybatis.generator;
+package io.example.mybatis.engine;
 
 import com.baomidou.mybatisplus.generator.config.OutputFile;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;

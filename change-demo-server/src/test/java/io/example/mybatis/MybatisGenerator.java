@@ -1,4 +1,4 @@
-package io.example.mybatis.generator;
+package io.example.mybatis;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.generator.config.OutputFile;
 import com.baomidou.mybatisplus.generator.config.TemplateType;
 import com.baomidou.mybatisplus.generator.fill.Property;
 import io.example.core.base.service.BaseService;
+import io.example.mybatis.engine.EnhanceFreemarkerTemplateEngine;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
