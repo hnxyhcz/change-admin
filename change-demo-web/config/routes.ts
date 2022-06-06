@@ -38,19 +38,16 @@ export default [
           },
         ],
       },
-      { component: './404' },
+      {
+        component: './404',
+      },
     ],
   },
-
   {
     path: '/',
     flatMenu: true,
     component: '@/layouts/PageLayout',
     routes: [
-      {
-        path: '/',
-        redirect: '/dashboard',
-      },
       {
         path: '/dashboard',
         name: '工作台',
@@ -87,9 +84,13 @@ export default [
           },
         ],
       },
+      {
+        path: '/',
+        redirect: '/dashboard',
+      },
+      {
+        component: './404',
+      },
     ],
   },
-
-  { path: '/', redirect: '/dashboard' },
-  { component: './404' },
 ];
