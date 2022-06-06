@@ -48,6 +48,10 @@ export default [
     component: '@/layouts/PageLayout',
     routes: [
       {
+        path: '/',
+        redirect: '/dashboard',
+      },
+      {
         path: '/dashboard',
         name: '工作台',
         icon: 'dashboard',

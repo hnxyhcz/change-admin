@@ -38,10 +38,10 @@ const Login: React.FC = () => {
     }
   };
   
-  const verifyCaptcha = (isShow: boolean, captcha: string | undefined) => {
+  const verifyCaptcha = async (isShow: boolean, captcha: string | undefined) => {
     setShowCaptcha(isShow)
     if (captcha) {
-      handleSubmit({ ...formRef.current, captcha });
+      await handleSubmit({ ...formRef.current, captcha });
     }
     setSubmitting(false);
   }

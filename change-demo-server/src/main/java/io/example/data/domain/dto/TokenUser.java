@@ -1,7 +1,6 @@
 package io.example.data.domain.dto;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -11,7 +10,6 @@ import java.util.Date;
  * @since 2022/6/5 16:19
  */
 @Data
-@NoArgsConstructor
 public class TokenUser implements Serializable {
     /**
      * 用户 ID
@@ -42,8 +40,4 @@ public class TokenUser implements Serializable {
      */
     private String os;
 
-    public TokenUser(String userId, String token) {
-        this.userId = userId;
-        this.token = token;
-    }
 }

@@ -10,6 +10,7 @@ import io.example.core.entity.ResponseResult;
 import io.example.core.exception.InternalServerException;
 import io.example.core.utils.IPUtils;
 import io.example.data.domain.dto.AuthRequest;
+import io.example.data.domain.dto.CurrentUser;
 import io.example.data.domain.dto.UserRequest;
 import io.example.data.service.UserService;
 import io.example.data.service.impl.RedisTokenServiceImpl;
@@ -59,13 +60,15 @@ public class AuthController {
             throw new AccessDeniedException("不支持的认证方式");
         }
         // 认证
+        CurrentUser currentUser;
         try {
-            authenticationManager.authenticate(authentication);
+            Authentication authenticate = authenticationManager.authenticate(authentication);
+            currentUser = (CurrentUser) authenticate.getPrincipal();
         } catch (Exception ex) {
             throw new InternalServerException(ErrorCodeEnum.USERNAME_PASSWORD_ERROR, ex);
         }
         // 生成 token
-        String token = tokenService.createAccessToken();
+        String token = tokenService.createAccessToken(currentUser);
         return ResponseEntity.ok().header(HttpHeaders.AUTHORIZATION, token).body(ResponseResult.success(token));
     }
 

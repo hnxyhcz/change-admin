@@ -1,5 +1,6 @@
 package io.example.data.service;
 
+import io.example.data.domain.dto.CurrentUser;
 import io.example.data.domain.dto.TokenUser;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,9 +22,10 @@ public interface TokenService {
     /**
      * 创建accessToken
      *
+     * @param user 当前登录用户
      * @return token
      */
-    String createAccessToken();
+    String createAccessToken(CurrentUser user);
 
     /**
      * 刷新AccessToken令牌

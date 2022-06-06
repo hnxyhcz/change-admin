@@ -7,7 +7,7 @@ import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
 import io.example.core.constant.CacheConsts;
 import io.example.core.security.TokenProperties;
-import io.example.core.utils.SecurityUtils;
+import io.example.data.domain.dto.CurrentUser;
 import io.example.data.domain.dto.TokenUser;
 import io.example.data.service.TokenService;
 import lombok.RequiredArgsConstructor;
@@ -48,9 +48,10 @@ public class RedisTokenServiceImpl implements TokenService {
     /**
      * 生成token
      */
-    public String createAccessToken() {
-        String userId = SecurityUtils.getUserId();
-        TokenUser tokenUser = new TokenUser(userId, IdUtil.fastUUID());
+    public String createAccessToken(CurrentUser user) {
+        TokenUser tokenUser = new TokenUser();
+        tokenUser.setUserId(user.getUserId());
+        tokenUser.setToken(IdUtil.fastUUID());
         tokenUser.setLoginTime(new Date());
         setUserAgent(tokenUser);
         refreshAccessToken(tokenUser);
