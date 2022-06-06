@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.generator.FastAutoGenerator;
 import com.baomidou.mybatisplus.generator.IFill;
 import com.baomidou.mybatisplus.generator.config.OutputFile;
+import com.baomidou.mybatisplus.generator.config.TemplateType;
 import com.baomidou.mybatisplus.generator.fill.Property;
 import io.example.core.base.service.BaseService;
 import org.junit.jupiter.api.Test;
@@ -33,6 +34,9 @@ public class MybatisGenerator {
 
     @Test
     public void run() {
+        // 是否生成mapper的xml文件（true: 生成，false: 不生成）
+        boolean isGenerateXML = true;
+
         // 要生成的表名
         List<String> tableList = Arrays.asList("t_comm_dict_distinct");
 
@@ -102,7 +106,15 @@ public class MybatisGenerator {
 
         // 模板配置(TemplateConfig)
         autoGenerator.templateConfig(builder -> {
-            // 自定义serviceImpl模板
+            // 是否禁用xml模板生成
+            if (!isGenerateXML) {
+                builder.disable(TemplateType.XML);
+            }
+            // 自定义 entity 模板（这里的模板springdoc会报错，所以去掉了，如果需要从mybatis-plus项目去拿模板）
+            builder.entity("/templates/entity.java");
+            // 自定义 controller 模板
+            builder.controller("/templates/controller.java");
+            // 自定义 serviceImpl 模板
             builder.serviceImpl("/templates/serviceImpl.java");
         });
 
